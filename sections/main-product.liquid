@@ -482,6 +482,7 @@
                     {{ block.shopify_attributes }}
                     style="display:flex;flex-direction:column;"
                   >
+                    {% comment %} start-ECOMM---custom style for color variant {% endcomment %}
                     {%- style -%}
                       .option-reorder-color label {
                         background-repeat: no-repeat;
@@ -504,9 +505,11 @@
                         opacity: 1;
                       }
                     {%- endstyle -%}
+                    {% comment %} end-ECOMM {% endcomment %}
                     {%- for option in product.options_with_values -%}
                     <fieldset class="js product-form__input option-reorder-{{option.name | downcase}}" style="{%-if option.name == 'Color'-%}order:1;{%-else-%}order:2;{%-endif-%}">
                         <legend class="form__label">{{ option.name }}</legend>
+                        {% comment %} start-ECOMM---customize color variant section {% endcomment %}
                         {%- if option.name == 'Color' -%}
                           {%- for value in option.values -%}
                             <input
@@ -519,7 +522,6 @@
                                 checked
                               {% endif %}
                             >
-                            {% comment %} <p>{{product.variants | json}}</p> {% endcomment %}
                             <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" style="background-image: url({{product.variants[forloop.index0].metafields.variants.variant_image_for_swatch.value | img_url: ''}})">
                               {{ value }}
                             </label>
@@ -541,6 +543,7 @@
                             </label>
                           {%- endfor -%}                        
                         {%- endif -%}
+                        {% comment %} end-ECOMM {% endcomment %}
                       </fieldset>
                     {%- endfor -%}
                     <script type="application/json">
