@@ -323,3 +323,13 @@ cart-remove-button .icon-remove {
     width: 60%;
   }
 }
+
+cart-remove-button a[aria-label*="Soft Winter Jacket"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cart-item__quantity-wrapper.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

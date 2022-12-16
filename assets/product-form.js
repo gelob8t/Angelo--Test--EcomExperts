@@ -40,7 +40,7 @@ if (!customElements.get('product-form')) {
             this.handleErrorMessage(response.description);
 
             const soldOutMessage = this.submitButton.querySelector('.sold-out-message');
-            if (!soldOutMessage) return;
+          if (!soldOutMessage) return;
             this.submitButton.setAttribute('aria-disabled', true);
             this.submitButton.querySelector('span').classList.add('hidden');
             soldOutMessage.classList.remove('hidden');
@@ -60,6 +60,33 @@ if (!customElements.get('product-form')) {
             quickAddModal.hide(true);
           } else {
             this.cart.renderContents(response);
+          }
+
+          if(response.title.indexOf('Handbag - Medium / Black') > -1) {
+            console.log("Handbag Black/Medium variant added");
+            fetch(window.Shopify.routes.root + 'products/dark-winter-jacket.js')
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data.id)
+              let formData = {
+                'items': [
+                  {
+                    'id': data.variants[0].id,
+                    'quantity': 1
+                  }
+                ]
+              };
+
+              fetch(`${routes.cart_add_url}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+              })
+              .then((response) => { return response.json(); })
+              .catch((error) => { console.error('Error:', error); });
+            })
           }
         })
         .catch((e) => {
