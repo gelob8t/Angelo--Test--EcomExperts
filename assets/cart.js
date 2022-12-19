@@ -5,6 +5,16 @@ class CartRemoveButton extends HTMLElement {
       event.preventDefault();
       const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
       cartItems.updateQuantity(this.dataset.index, 0);
+      //start--ECOMM remove soft jacket when handbag medium/black variant is removed
+      var notExist = setInterval(() => {
+        if( document.querySelector('cart-remove-button [aria-label*="Handbag - Medium / Black"]') === null ) {
+          console.log("This item removed!")
+          clearInterval(notExist)
+          const removeSoftJacketIndex = document.querySelector('cart-remove-button [aria-label*="Soft Winter Jacket"]').parentElement.dataset.index
+          cartItems.updateQuantity(removeSoftJacketIndex, 0);
+        }
+      }, 100)
+      //end--ECOMM
     });
   }
 }

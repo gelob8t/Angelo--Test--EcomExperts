@@ -480,25 +480,70 @@
                     data-section="{{ section.id }}"
                     data-url="{{ product.url }}"
                     {{ block.shopify_attributes }}
+                    style="display:flex;flex-direction:column;"
                   >
+                    {% comment %} start-ECOMM---custom style for color variant {% endcomment %}
+                    {%- style -%}
+                      .option-reorder-color label {
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        background-position: center center;
+                        border-width: 0 !important;
+                        background-color: transparent !important;
+                        color: transparent !important;
+                      }
+                      .option-reorder-color {
+                        display: flex;
+                        flex-direction: column;
+                      }
+                      .option-reorder-color label {
+                        display: inline-block;
+                        opacity: 0.5;
+                        width: 10%;
+                      }
+                      .product-form__input.option-reorder-color input[type='radio']:checked + label {
+                        opacity: 1;
+                      }
+                    {%- endstyle -%}
+                    {% comment %} end-ECOMM {% endcomment %}
                     {%- for option in product.options_with_values -%}
-                      <fieldset class="js product-form__input">
+                    <fieldset class="js product-form__input option-reorder-{{option.name | downcase}}" style="{%-if option.name == 'Color'-%}order:1;{%-else-%}order:2;{%-endif-%}">
                         <legend class="form__label">{{ option.name }}</legend>
-                        {%- for value in option.values -%}
-                          <input
-                            type="radio"
-                            id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
-                            name="{{ option.name }}"
-                            value="{{ value | escape }}"
-                            form="{{ product_form_id }}"
-                            {% if option.selected_value == value %}
-                              checked
-                            {% endif %}
-                          >
-                          <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
-                            {{ value }}
-                          </label>
-                        {%- endfor -%}
+                        {% comment %} start-ECOMM---customize color variant section {% endcomment %}
+                        {%- if option.name == 'Color' -%}
+                          {%- for value in option.values -%}
+                            <input
+                              type="radio"
+                              id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                              name="{{ option.name }}"
+                              value="{{ value | escape }}"
+                              form="{{ product_form_id }}"
+                              {% if option.selected_value == value %}
+                                checked
+                              {% endif %}
+                            >
+                            <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" style="background-image: url({{product.variants[forloop.index0].metafields.variants.variant_image_for_swatch.value | img_url: ''}})">
+                              {{ value }}
+                            </label>
+                          {%- endfor -%}
+                        {% else %}    
+                          {%- for value in option.values -%}
+                            <input
+                              type="radio"
+                              id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                              name="{{ option.name }}"
+                              value="{{ value | escape }}"
+                              form="{{ product_form_id }}"
+                              {% if option.selected_value == value %}
+                                checked
+                              {% endif %}
+                            >
+                            <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+                              {{ value }}
+                            </label>
+                          {%- endfor -%}                        
+                        {%- endif -%}
+                        {% comment %} end-ECOMM {% endcomment %}
                       </fieldset>
                     {%- endfor -%}
                     <script type="application/json">
